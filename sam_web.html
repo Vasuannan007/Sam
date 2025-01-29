@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotoVenture - Premium Motorbike Rentals</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #ff4d4d;
+            --secondary: #cb0e0e;
+            --accent: #ff8080;
+            --background: #1a1a1a;
+            --text: #ffffff;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 2px 10px rgba(255,77,77,0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: text-shadow 0.3s;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary) 0%, transparent 100%);
+            opacity: 0.3;
+            animation: gradientFlow 10s infinite linear;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,77,77,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255,77,77,0.4);
+        }
+
+        /* Bikes Section */
+        .bikes-section {
+            padding: 8rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .filters {
+            margin-bottom: 3rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-input {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--card-bg);
+            border-radius: 50px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255,77,77,0.2);
+        }
+
+        .bikes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            perspective: 1000px;
+        }
+
+        .bike-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.5s;
+            transform-style: preserve-3d;
+            animation: slideUp 0.8s ease-out backwards;
+        }
+
+        .bike-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(255,77,77,0.3);
+        }
+
+        .bike-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .bike-card:hover .bike-image {
+            transform: scale(1.1);
+        }
+
+        .bike-details {
+            padding: 2rem;
+        }
+
+        .bike-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .bike-specs {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .bike-specs p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            padding-top: 80px;
+            min-height: 100vh;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* About Page */
+        .about-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .about-content {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .about-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Contact Page */
+        .contact-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .contact-form {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Profile Page */
+        .profile-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .profile-header {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .bookings-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .booking-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .booking-card:hover {
+            transform: translateX(10px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            animation: scaleIn 0.3s ease-out;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes gradientFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(0,0,0,0.9);
+                flex-direction: column;
+                padding: 1rem;
+                transform: translateY(-100%);
+                transition: transform 0.3s;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .bikes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="#" class="logo" onclick="showPage('home')">MotoVenture</a>
+            <div class="nav-links">
+                <a href="#" onclick="showPage('home')">Home</a>
+                <a href="#" onclick="showPage('about')">About</a>
+                <a href="#" onclick="showPage('contact')">Contact</a>
+                <a href="#" onclick="showPage('profile')">Your Bookings</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Ride Your Adventure</h1>
+                <p>Experience the thrill of the road with our premium motorbike collection</p>
+                <button class="btn btn-primary" onclick="scrollToBikes()">Explore Bikes</button>
+            </div>
+        </section>
+
+        <section id="bikes" class="bikes-section">
+            <h2 class="section-title">Our Fleet</h2>
+            <div class="filters">
+                <input type="text" class="filter-input" id="searchInput" placeholder="Search bikes...">
+                <select class="filter-input" id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Cruiser">Cruiser</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Touring">Touring</option>
+                </select>
+                <select class="filter-input" id="priceFilter">
+                    <option value="">All Prices</option>
+                    <option value="low">Under $100/day</option>
+                    <option value="medium">$100 - $200/day</option>
+                    <option value="high">Over $200/day</option>
+                </select>
+            </div>
+            <div class="bikes-grid" id="bikesGrid"></div>
+        </section>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <section class="about-section">
+            <div class="about-content">
+                <h2 class="section-title">About MotoVenture</h2>
+                <p>Founded in 2020, MotoVenture has become the premier destination for motorcycle enthusiasts seeking premium rental experiences. Our passion for motorcycles and commitment to excellence drives everything we do.</p>
+                
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h3>Premium Fleet</h3>
+                        <p>Carefully curated selection of top-tier motorcycles, maintained to the highest standards</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>Expert Service</h3>
+                        <p>Professional team of motorcycle enthusiasts providing personalized service</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>Safety First</h3>
+                        <p>Comprehensive safety checks and insurance coverage for peace of mind</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <section class="contact-section">
+            <div class="contact-form">
+                <h2 class="section-title">Contact Us</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <input type="text" class="form-input" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-input" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-input" placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- Profile Page -->
+    <div id="profile" class="page">
+        <section class="profile-section">
+            <h3>Your Bookings</h3>
+            <div class="bookings-list" id="bookingsList"></div>
+        </section>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <h2>Book Your Motorcycle</h2>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" class="form-input" placeholder="Phone" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-input" placeholder="Start Date" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-input" placeholder="End Date" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Pickup Location" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Return Location" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample motorcycle data
+        const bikes = [
+            {
+                id: 1,
+                name: "Ducati Panigale V4",
+                type: "Sport",
+                price: 250,
+                image: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80",
+                description: "Ultimate sports bike for the track enthusiast",
+                specs: {
+                    engine: "1103cc V4",
+                    power: "214 HP",
+                    weight: "175 kg",
+                    category: "Superbike"
+                }
+            },
+            {
+                id: 2,
+                name: "Harley-Davidson Road King",
+                type: "Cruiser",
+                price: 180,
+                image: "https://images.unsplash.com/photo-1558981359-219d6364c9c8?auto=format&fit=crop&q=80",
+                description: "Classic American cruiser for comfortable touring",
+                specs: {
+                    engine: "1745cc V-Twin",
+                    power: "89 HP",
+                    weight: "379 kg",
+                    category: "Cruiser"
+                }
+            },
+            {
+                id: 3,
+                name: "BMW R 1250 GS Adventure",
+                type: "Adventure",
+                price: 200,
+                image: "data:image/jpeg;base64,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",
+                description: "The ultimate adventure touring motorcycle",
+                specs: {
+                    engine: "1254cc Boxer Twin",
+                    power: "136 HP",
+                    weight: "268 kg",
+                    category: "Adventure"
+                }
+            },
+            {
+                id: 4,
+                name: "Kawasaki Ninja H2",
+                type: "Sport",
+                price: 300,
+                image: "https://images.unsplash.com/photo-1580310614729-ccd69652491d?auto=format&fit=crop&q=80",
+                description: "Supercharged performance motorcycle",
+                specs: {
+                    engine: "998cc Supercharged",
+                    power: "228 HP",
+                    weight: "238 kg",
+                    category: "Hypersport"
+                }
+            }
+        ];
+
+        // User data (simulated)
+        let currentUser = {
+            name: "John Doe",
+            email: "john@example.com",
+            phone: "+1 234 567 8900",
+            bookings: []
+        };
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            if (pageId === 'profile') {
+                updateBookingsList();
+            }
+        }
+
+        // Initialize bike grid
+        function initializeBikes() {
+            const bikesGrid = document.getElementById('bikesGrid');
+            bikesGrid.innerHTML = '';
+
+            bikes.forEach(bike => {
+                const bikeCard = document.createElement('div');
+                bikeCard.className = 'bike-card';
+                bikeCard.innerHTML = `
+                    <img src="${bike.image}" alt="${bike.name}" class="bike-image">
+                    <div class="bike-details">
+                        <h3>${bike.name}</h3>
+                        <p>${bike.description}</p>
+                        <div class="bike-specs">
+                            <p>Type: ${bike.type}</p>
+                            <p>Engine: ${bike.specs.engine}</p>
+                            <p>Power: ${bike.specs.power}</p>
+                            <p>Weight: ${bike.specs.weight}</p>
+                        </div>
+                        <p class="price">$${bike.price}/day</p>
+                        <button class="btn btn-primary" onclick="openBookingModal(${bike.id})">Book Now</button>
+                    </div>
+                `;
+                bikesGrid.appendChild(bikeCard);
+            });
+        }
+
+        // Filter functionality
+        function filterBikes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+
+            const filteredBikes = bikes.filter(bike => {
+                const matchesSearch = bike.name.toLowerCase().includes(searchTerm) ||
+                                   bike.description.toLowerCase().includes(searchTerm);
+                const matchesType = !typeFilter || bike.type === typeFilter;
+                const matchesPrice = !priceFilter ||
+                    (priceFilter === 'low' && bike.price < 100) ||
+                    (priceFilter === 'medium' && bike.price >= 100 && bike.price <= 200) ||
+                    (priceFilter === 'high' && bike.price > 200);
+
+                return matchesSearch && matchesType && matchesPrice;
+            });
+
+            const bikesGrid = document.getElementById('bikesGrid');
+            bikesGrid.innerHTML = '';
+
+            filteredBikes.forEach(bike => {
+                const bikeCard = document.createElement('div');
+                bikeCard.className = 'bike-card';
+                bikeCard.innerHTML = `
+                    <img src="${bike.image}" alt="${bike.name}" class="bike-image">
+                    <div class="bike-details">
+                        <h3>${bike.name}</h3>
+                        <p>${bike.description}</p>
+                        <div class="bike-specs">
+                            <p>Type: ${bike.type}</p>
+                            <p>Engine: ${bike.specs.engine}</p>
+                            <p>Power: ${bike.specs.power}</p>
+                            <p>Weight: ${bike.specs.weight}</p>
+                        </div>
+                        <p class="price">$${bike.price}/day</p>
+                        <button class="btn btn-primary" onclick="openBookingModal(${bike.id})">Book Now</button>
+                    </div>
+                `;
+                bikesGrid.appendChild(bikeCard);
+            });
+        }
+
+        // Booking modal functionality
+        function openBookingModal(bikeId) {
+            const modal = document.getElementById('bookingModal');
+            modal.style.display = 'flex';
+            modal.dataset.bikeId = bikeId;
+        }
+
+        function closeBookingModal() {
+            const modal = document.getElementById('bookingModal');
+            modal.style.display = 'none';
+        }
+
+        // Update bookings list in profile
+        function updateBookingsList() {
+            const bookingsList = document.getElementById('bookingsList');
+            bookingsList.innerHTML = '';
+
+            currentUser.bookings.forEach(booking => {
+                const bike = bikes.find(b => b.id === booking.bikeId);
+                const bookingCard = document.createElement('div');
+                bookingCard.className = 'booking-card';
+                bookingCard.innerHTML = `
+                    <h3>${bike.name}</h3>
+                    <p>Start Date: ${booking.startDate}</p>
+                    <p>End Date: ${booking.endDate}</p>
+                    <p>Status: ${booking.status}</p>
+                `;
+                bookingsList.appendChild(bookingCard);
+            });
+        }
+
+        // Handle booking form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const bikeId = parseInt(document.getElementById('bookingModal').dataset.bikeId);
+            const formData = new FormData(e.target);
+            
+            const booking = {
+                id: Date.now(),
+                bikeId: bikeId,
+                startDate: formData.get('startDate'),
+                endDate: formData.get('endDate'),
+                pickupLocation: formData.get('pickup-location'),
+                returnLocation: formData.get('return-location'),
+                status: 'confirmed'
+            };
+
+            currentUser.bookings.push(booking);
+            closeBookingModal();
+            alert('Booking confirmed! Check your profile for details.');
+            e.target.reset();
+        });
+
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Message sent! We will get back to you soon.');
+            e.target.reset();
+        });
+
+        // Scroll to bikes section
+        function scrollToBikes() {
+            document.getElementById('bikes').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target === modal) {
+                closeBookingModal();
+            }
+        }
+
+        // Initialize the page
+        initializeBikes();
+
+        // Add event listeners for filters
+        document.getElementById('searchInput').addEventListener('input', filterBikes);
+        document.getElementById('typeFilter').addEventListener('change', filterBikes);
+        document.getElementById('priceFilter').addEventListener('change', filterBikes);
+    </script>
+</body>
+</html>
